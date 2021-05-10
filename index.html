@@ -143,7 +143,7 @@
         //打开loading
         toggleLoadingModal(true);
         //将毫秒数和描述作为文件名,从base64里获取文件后缀名
-        var fileName = Date.now() + "|" + desc +"." + bs64.match(/data:image\/(\w+)/)[1];
+        var fileName = Date.now() + "_" + desc +"." + bs64.match(/data:image\/(\w+)/)[1];
         var message = desc;
         Gallery.recordImage({
           fileName:fileName,
