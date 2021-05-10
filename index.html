@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, user-scalable=0,initial-scale=1.0" />
+    <title>依依画廊</title>
+    <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
+    <link
+      rel="stylesheet"
+      href="//at.alicdn.com/t/font_2536416_23sdh7kp7b9.css"
+    />
+    <link rel="stylesheet" href="./css/style.css">
+  </head>
+  <body>
+    <div class="tab-view view-box">
+      <h2 class="intro">小依的成长画册</h2>
+      <ul class="image-container">
+      </ul>
+    </div>
+    <div class="tab-view record-box">
+      <h2 class="intro">记录精彩瞬间</h2>
+      <div class="file-info-box">
+        <p>
+          选择要保存的照片
+        </p>
+        <input class="file-input" onchange="getBs64(this)" type="file" accept="image/*" />
+        <p>
+          一句话描述这个瞬间
+        </p>
+        <textarea name="" id="description" cols="40" rows="2"></textarea>
+        <p>
+          <button onclick="sendRequest()">确定记录</button>
+        </p>
+      </div>
+      
+    </div>
+    <div class="bottom-tab-box">
+      <div class="item active" data-target="view-box">
+        <span class="iconfont iconliulan"></span>
+        <div class="word-box">
+          <span> 浏览 </span>
+        </div>
+      </div>
+      <div class="divider-line">
+
+      </div>
+      <div class="item" data-target="record-box">
+        <span class="iconfont iconjilu"></span>
+        <div class="word-box">
+          <span> 记录 </span>
+        </div>
+      </div>
+    </div>
+    <script src="./js/utils.js"></script>
+    <script src="http://wechatfe.github.io/lib/vconsole/3.4.1/vconsole.min.js"></script>
+    <script>
+      var clickCount = 0;
+      document.querySelector('h2.intro').onclick = function(){
+        clickCount++;
+        if(clickCount >= 5){
+          new VConsole();
+        }
+      }
+      //记录本地转化的base64数据，以发送到github服务器
+      var bs64 = ""; 
+      listenBottomTabChange(function(currentTab){
+
+        var tabItems = document.querySelectorAll('[data-target]');
+        var tabViews = document.querySelectorAll('.tab-view');
+        Array.prototype.forEach.call(tabItems,function(tabItem){
+          tabItem.classList.remove('active')
+        })
+        Array.prototype.forEach.call(tabViews,function(tabView){
+          tabView.style.display = "none";
+        })
+
+        document.querySelector('[data-target='+ currentTab +']').classList.add('active');
+        document.querySelector('.'+currentTab).style.display = 'block'
+      });
+      
+      // 增量添加图片
+      function increaseNewImage(fileName){
+        Gallery.fetchImageData(fileName).then(res=>{
+            document.querySelector('.image-container').innerHTML += `
+            <li><img src="${res}"/></li>
+            `;
+          })
+      }
+      //获取图片数据
+      Gallery.fetchImageNames().then(res=>{
+        res.forEach(fileName=>{
+          increaseNewImage(fileName)
+        })
+      })
+      
+      function sendRequest() {
+        var desc = document.querySelector('#description').value.trim();
+        if(!desc){
+          alert('请追加图片的描述');
+          return;
+        }
+        //将毫秒数和描述作为文件名,从base64里获取文件后缀名
+        var fileName = Date.now() + "|" + desc +"." + bs64.match(/data:image\/(\w+)/)[1];
+        var message = desc;
+        Gallery.recordImage({
+          fileName:fileName,
+          message:message,
+          base64:bs64
+        }).then(res=>{
+          increaseNewImage(fileName)
+          alert('记录成功！')
+        }).catch(err=>{
+          alert('记录失败！')
+        })
+      }
+      function getBs64(target) {
+        //最大限制到600k
+        var maxKB = 600;
+        var file = target.files[0];
+        fileToBase64(file,maxKB,function(resultBase64){
+          bs64 = resultBase64;
+        })
+      }
+    </script>
+  </body>
+</html>

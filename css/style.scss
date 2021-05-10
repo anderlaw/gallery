@@ -1,0 +1,80 @@
+// reset style
+body {
+  background-color: #000;
+}
+ul{
+  margin: 0;
+  padding: 0;
+}
+.intro {
+  color: #fff;
+  font-size: 24px;
+  text-align: center;
+}
+// 图片容器
+.image-container{
+  li{
+    margin-bottom: 2px;
+  }
+  img{
+    width: 100%;
+  }
+}
+// 信息记录盒子
+.file-info-box{
+  color: #fff;
+  font-size: 16px;
+  input{
+    margin-bottom: 20px;
+  }
+  p{
+    margin: 10px 0;
+  }
+  textarea{
+    font-size: 16px;
+    padding: 10px;
+  }
+}
+.bottom-tab-box{
+  position: fixed;
+  bottom: 0;
+  width: 100vw;
+  background-color: #121212;
+  padding: 10px 0 18px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  .item {
+    color: #7f7f7f;
+    text-align: center;
+    width: 50%;
+    &.active {
+      color: #3983f7;
+    }
+    .word-box {
+      font-size: 14px;
+    }
+    .iconfont {
+      font-size: 22px;
+    }
+  }
+  .divider-line {
+    background-color: rgba(127,127,127,.36);
+    width: 1px;
+    height:30px ;
+  }
+}
+// input元素自定义外观
+button,input{
+  color: #f9f9f9;
+  background-color: #515151;
+}
+button{
+  line-height: 2;
+  border-radius: 16px;
+  margin-top: 10px;
+}
+/* 默认显示预览内容 */
+.record-box {
+  display: none;
+}
