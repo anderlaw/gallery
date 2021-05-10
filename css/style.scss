@@ -11,6 +11,25 @@ ul{
   font-size: 24px;
   text-align: center;
 }
+// 动画
+@keyframes circling
+{
+  0%{
+    transform: rotate(0deg);
+  }
+  25%{
+    transform: rotate(90deg);
+  }
+  50%{
+    transform: rotate(180deg);
+  }
+  75%{
+    transform: rotate(270deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
 // 图片容器
 .image-container{
   li{
@@ -64,12 +83,62 @@ ul{
     height:30px ;
   }
 }
+// identify-modal
+.identify-modal{
+  position: fixed;
+  left: 0;
+  top: 50vh;
+  left: 50vw;
+  transform: translate(-50%,-50%);
+  background-color: #fff;
+  padding: 18px 10px;
+  border-radius: 5px;
+  display: none;
+  .form-box{
+    box-sizing: border-box;
+    
+    input{
+      background-color: #fff;
+      color: #121212;
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+  }
+}
+.loading-modal{
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  display: none;
+  background-color: rgba(0,0,0,0.8);
+  .icon-box{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    text-align: center;
+    .iconfont{
+      font-size: 50px;
+      display: inline-block;
+      color: #fff;
+      animation: circling .4s infinite;
+    }
+    .tip-text{
+      margin-top: 6px;
+      font-size: 16px;
+      color: #fff;
+    }
+  }
+
+}
 // input元素自定义外观
-button,input{
+.reocord-btn,input{
   color: #f9f9f9;
   background-color: #515151;
 }
-button{
+.reocord-btn{
   line-height: 2;
   border-radius: 16px;
   margin-top: 10px;

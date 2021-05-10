@@ -8,7 +8,7 @@
     <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
     <link
       rel="stylesheet"
-      href="//at.alicdn.com/t/font_2536416_23sdh7kp7b9.css"
+      href="//at.alicdn.com/t/font_2536416_erbvf2u9vtv.css"
     />
     <link rel="stylesheet" href="./css/style.css">
   </head>
@@ -30,7 +30,7 @@
         </p>
         <textarea name="" id="description" cols="40" rows="2"></textarea>
         <p>
-          <button onclick="sendRequest()">确定记录</button>
+          <button class="reocord-btn" onclick="sendRequest()">确定记录</button>
         </p>
       </div>
       
@@ -50,6 +50,19 @@
         <div class="word-box">
           <span> 记录 </span>
         </div>
+      </div>
+    </div>
+    <div class="identify-modal">
+      <div class="form-box">
+        <input type="text" placeholder="请输入您的身份信息">
+        <br>
+        <button onclick="cacheIdentifier()">确定</button>
+      </div>
+    </div>
+    <div class="loading-modal">
+      <div class="icon-box">
+        <span class="iconfont iconloading1"></span>
+        <div class="tip-text">文件上传中...</div>
       </div>
     </div>
     <script src="./js/utils.js"></script>
@@ -93,13 +106,42 @@
           increaseNewImage(fileName)
         })
       })
-      
+      function cacheIdentifier(){
+        var identifier = document.querySelector('.identify-modal input').value.trim();
+        if(identifier){
+          toggleIdentifyModal(false);
+          localStorage.setItem('identifier',identifier);
+        }
+      }
+      function toggleIdentifyModal(visible){
+        document.querySelector('.identify-modal').style.display =  visible ? 'block':'none';
+        document.querySelector('.identify-modal input').value = "";
+      }
+      function toggleLoadingModal(visible){
+        document.querySelector('.loading-modal').style.display =  visible ? 'block':'none';
+      }
       function sendRequest() {
         var desc = document.querySelector('#description').value.trim();
+        if(!bs64){
+          alert('请添加图片');
+          return;
+        }
         if(!desc){
           alert('请追加图片的描述');
           return;
         }
+        //验证
+        var validIdentifiers = ["依依妈妈","依依爸爸","依依爷爷","依依奶奶"];
+        var localIdentifier = localStorage.getItem('identifier');
+        if(!(localIdentifier && validIdentifiers.indexOf(localIdentifier) > -1)){
+          //打开弹框要求核验身份
+          toggleIdentifyModal(true);
+          return 
+        }
+        //over
+
+        //打开loading
+        toggleLoadingModal(true);
         //将毫秒数和描述作为文件名,从base64里获取文件后缀名
         var fileName = Date.now() + "|" + desc +"." + bs64.match(/data:image\/(\w+)/)[1];
         var message = desc;
@@ -108,9 +150,11 @@
           message:message,
           base64:bs64
         }).then(res=>{
-          increaseNewImage(fileName)
+          increaseNewImage(fileName);
+          toggleLoadingModal(false);
           alert('记录成功！')
         }).catch(err=>{
+          toggleLoadingModal(false);
           alert('记录失败！')
         })
       }
