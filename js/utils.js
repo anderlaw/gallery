@@ -142,12 +142,13 @@ function fileToBase64(file,maxKB,cb) {
 var Gallery = (function () {
   var baseUrl = "https://api.github.com/repos/anderlaw/gallery";
   // var token = "token "+localStorage.getItem("token");
-  var token = "token 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";
+  var token = "token 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";
   return {
     fetchImageNames: function (resolve, reject) {
       return fetch(baseUrl + "/contents/images", {
         headers: {
           Authorization: token,
+          Accept:"application/vnd.github.v3+json"
         },
       }).then(function (res) {
         return res.json();
@@ -161,7 +162,7 @@ var Gallery = (function () {
       return fetch(baseUrl + "/contents/images/"+fileName, {
         headers: {
           Authorization: token,
-          Accept:"application/vnd.github.VERSION.raw"
+          Accept:"application/vnd.github.v3.raw"
         },
       }).then(function (res) {
           return res.blob();
@@ -183,6 +184,7 @@ var Gallery = (function () {
         method: "put",
         headers: {
           Authorization: token,
+          Accept:"application/vnd.github.v3+json"
         },
         body: JSON.stringify({
           message: option.message,
