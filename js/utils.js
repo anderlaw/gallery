@@ -138,16 +138,33 @@ function fileToBase64(file,maxKB,cb) {
   }
   
 }
+function encryptToken(string){
+  var strArr = string.split("");
+  return strArr.map(function(letter){
+    // 取基数
+    var baseVal = ~(letter.charCodeAt(0)*2+1);
+    baseVal = -baseVal;
+    return String.fromCharCode(baseVal)
+  }).join("_")
+}
+function decryptToken(string){
+  var strArr = string.split("_");
+  return strArr.map(function(letter){
+    // 取基数
+    var originalCharCode = (~(-letter.charCodeAt(0))-1)/2;
+    return String.fromCharCode(originalCharCode)
+  }).join("")
+}
 // 每次取出10张照片，采取懒加载方式
 var Gallery = (function () {
   var baseUrl = "https://api.github.com/repos/anderlaw/gallery";
   // var token = "token "+localStorage.getItem("token");
-  var token = "token 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";
+  var token = "ê_à_Ø_Ì_Þ_B_Ð_Ò_â_À_l_ì_l__Ä_b___î_è_ª_Ä_j_ä__¢_¦_¬_Ê__à_´_ä_Ö_ô_°_t_h_¨_h_h_à_°_t__¤";
   return {
     fetchImageNames: function (resolve, reject) {
       return fetch(baseUrl + "/contents/images", {
         headers: {
-          Authorization: token,
+          Authorization: decryptToken(token),
           Accept:"application/vnd.github.v3+json"
         },
       }).then(function (res) {
@@ -161,7 +178,7 @@ var Gallery = (function () {
     fetchImageData:function(fileName){
       return fetch(baseUrl + "/contents/images/"+fileName, {
         headers: {
-          Authorization: token,
+          Authorization: decryptToken(token),
           Accept:"application/vnd.github.v3.raw"
         },
       }).then(function (res) {
@@ -183,7 +200,7 @@ var Gallery = (function () {
       return fetch(baseUrl + "/contents/images/" + option.fileName, {
         method: "put",
         headers: {
-          Authorization: token,
+          Authorization: decryptToken(token),
           Accept:"application/vnd.github.v3+json"
         },
         body: JSON.stringify({
