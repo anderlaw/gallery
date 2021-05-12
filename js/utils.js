@@ -172,6 +172,8 @@ var Gallery = (function () {
       }).then(function (res) {
         return res.map(function(objItem){
           return objItem.name;
+        }).sort(function(a,b){ 
+          return parseInt(b)-parseInt(a);
         })
       })
     },
